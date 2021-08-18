@@ -120,7 +120,11 @@ runs:
         IONOS_PASSWORD: ${{ inputs.ionos-vdc-password }}
         IONOS_SDK_TEST_RUNNER_ARGS: ${{ inputs.test-runner-args }}
       run: |-
-        [ "${{ inputs.test }}" == "true" ] && bash ${GITHUB_WORKSPACE}/${{ inputs.assets-dir }}/scripts/test.sh || exit 0
+        if [ "${{ inputs.test }}" == "true" ]; then
+          bash ${GITHUB_WORKSPACE}/${{ inputs.assets-dir }}/scripts/test.sh
+        else
+          exit 0
+        fi
     
     - id: output-sdk-dir
       shell: bash
