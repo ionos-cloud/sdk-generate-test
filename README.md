@@ -12,6 +12,7 @@ This is a github action used for generating and testing Ionos Cloud SDKs.
 | codex-bucket | codex bucked to be used | yes | |
 | codex-s3-key | s3 key to use to read from the bucket | yes | | 
 | codex-s3-secret | s3 secret to use to read from the bucket | yes | |
+| node-auth-token | token used for auth with the github npm registry - always use `${{ secrets.GITHUB_TOKEN }}`| yes | |
 | github-pat | github personal access token to use to clone the sdk repo | yes | |
 | sdk-name | name of the sdk to generate | yes | |
 | assets-dir | directory with sdk assets used to generate it | yes | |
