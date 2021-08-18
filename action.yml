@@ -67,28 +67,38 @@ runs:
       env:
         IONOS_SDK_NAME: ${{ inputs.sdk-name }}
         GITHUB_PAT: ${{ inputs.github-pat }}
-      run: ${{ github.action_path }}/clone.sh
+      run: |
+        echo "::group::Cloning repositories"
+        ${{ github.action_path }}/clone.sh
+        echo "::endgroup::"
          
     - name: Installing the Codex
       shell: bash
       env:
         NODE_AUTH_TOKEN: ${{ inputs.node-auth-token }}
       run: |
+        echo "::group::Installing codex"
         npm install -g @ionos-cloud/codex
         codex config s3.key ${{ inputs.codex-s3-key }}
         codex config s3.secret ${{ inputs.codex-s3-secret }}
         codex config s3.bucket ${{ inputs.codex-s3-bucket }}
+        echo "::endgroup::"
 
     - name: Installing ionossdk
       shell: bash
       env:
         NODE_AUTH_TOKEN: ${{ inputs.node-auth-token }}
       run: |
+        echo "::group::Installing ionossdk"
         npm install -g @ionos-cloud/ionossdk
+        echo "::endgroup::"
 
     - name: Compiling the Codex
       shell: bash
-      run: codex compile -o /tmp/swagger.json --debug
+      run: |
+        echo "::group::Compiling the codex"
+        codex compile -o /tmp/swagger.json --debug
+        echo "::endgroup::"
 
     - name: Generate the SDK
       shell: bash
