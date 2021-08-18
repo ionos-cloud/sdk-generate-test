@@ -51,7 +51,11 @@ inputs:
     description: 'extra args to pass to the test runner'
     required: false
     default: '--fail-fast --batch'
-  
+  git-versioning:
+    description: 'whether to create tags and branches or not'
+    required: false
+    default: false
+
 outputs:
   sdk-dir:
     description: "Directory with the generated SDK"
@@ -71,7 +75,23 @@ runs:
         echo "::group::Cloning repositories"
         ${{ github.action_path }}/clone.sh
         echo "::endgroup::"
-         
+
+    - name: Checking if version already exists
+      working-directory: /tmp/${{ inputs.sdk-name }}
+      shell: bash
+      env:
+        IONOS_SDK_VERSION: ${{ inputs.version }}
+      run: |-
+        if [ "${{ inputs.git-versioning }}" == "true" ]; then
+          echo "::group::Checking if a git tag for version ${{ inputs.version }} already exists"
+          bash ${{ github.action_path }}/check-tag.sh
+          echo "::endgroup::"
+        else
+          echo "::group::Skipping git tag check"
+          echo "::endgroup::"
+        fi
+
+        
     - name: Installing the Codex
       shell: bash
       env:
@@ -112,7 +132,7 @@ runs:
         --output-dir /tmp/${{ inputs.sdk-name }} \
         --build --debug
         echo "::endgroup::"
-         
+    
     - name: Installing the test runner
       shell: bash
       env:
@@ -143,9 +163,25 @@ runs:
           bash ${GITHUB_WORKSPACE}/${{ inputs.assets-dir }}/scripts/test.sh
           echo "::endgroup::"
         else
+          echo "::group::Skipping tests"
+          echo "::endgroup::"
           exit 0
         fi
-    
+
+    - name: Creating git tag and branch
+      working-directory: /tmp/${{ inputs.sdk-name }}
+      shell: bash
+      run: |-
+        if [ "${{ inputs.git-versioning }}" == "true" ]; then
+          echo "::group::Creating git tag and branch (if needed)"
+          bash ${{ github.action_path }}/git-versioning.sh ${{ inputs.version }}
+          echo "::endgroup::"
+        else
+          echo "::group::Skipping git tag and branch"
+          echo "::endgroup::"
+        fi
+
+
     - id: output-sdk-dir
       shell: bash
       run: echo "::set-output name=sdk-dir::/tmp/${{ inputs.sdk-name }}"
