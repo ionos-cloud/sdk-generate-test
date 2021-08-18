@@ -119,6 +119,7 @@ runs:
         IONOS_PASSWORD: ${{ inputs.ionos-vdc-password }}
         IONOS_SDK_TEST_RUNNER_ARGS: ${{ inputs.test-runner-args }}
       run: |-
+        echo ${{ inputs.test }}
         bash ${{ inputs.assets-dir }}/scripts/test.sh
     
     - id: output-sdk-dir
