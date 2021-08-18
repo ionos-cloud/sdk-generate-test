@@ -66,6 +66,7 @@ runs:
       shell: bash
       env:
         IONOS_SDK_NAME: ${{ inputs.sdk-name }}
+        GITHUB_PAT: ${{ inputs.github-pat }}
       run: ${{ github.action_path }}/clone.sh
          
     - name: Installing the Codex
