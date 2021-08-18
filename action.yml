@@ -34,6 +34,10 @@ inputs:
   assets-dir: 
     description: 'assets directory'
     required: true
+  test:
+    description: 'whether to run tests or not'
+    required: false
+    default: true
   test-driver:
     description: 'test driver to use'
     required: true
@@ -47,16 +51,7 @@ inputs:
     description: 'extra args to pass to the test runner'
     required: false
     default: '--fail-fast --batch'
-  java-version: 
-    description: 'java version to use'
-    default: 1.8
-    required: false
-  node-version:
-    description: 'node version to use'
-    required: false
-    default: 16
-
-
+  
 outputs:
   sdk-dir:
     description: "Directory with the generated SDK"
@@ -67,20 +62,12 @@ runs:
   using: "composite"
   steps:
 
-    - name: Setting up Node
+    - name: Cloning repositories
       shell: bash
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{inputs.node-version}}
-        registry-url: https://npm.pkg.github.com/
-        scope: '@ionos-cloud'
-
-    - name: Setting up JDK ${{ inputs.java-version }}
-      shell: bash
-      uses: actions/setup-java@v1
-      with:
-        java-version: ${{ inputs.java-version }}
-          
+      env:
+        IONOS_SDK_NAME: ${{ inputs.sdk-name }}
+      run: ${{ github.action_path }}/clone.sh
+         
     - name: Installing the Codex
       shell: bash
       env:
@@ -102,17 +89,7 @@ runs:
       shell: bash
       run: codex compile -o /tmp/swagger.json --debug
 
-    - name: Checkout the SDK
-      shell: bash
-      uses: actions/checkout@v2
-      with:
-          repository: ionos-cloud/${{ inputs.sdk-name }}
-          path: /tmp/${{ inputs.sdk-name }}
-          ref: master
-          token: ${{ inputs.github-pat }}
-
     - name: Generate the SDK
-      shell: bash
       shell: bash
       run: |-
         ionossdk generate \
@@ -122,16 +99,7 @@ runs:
         --version ${{ inputs.version }} \
         --output-dir /tmp/${{ inputs.sdk-name }} \
         --build --debug
-
-    - name: Checking out test drivers
-      shell: bash
-      uses: actions/checkout@v2
-      with:
-           repository: ionos-cloud/sdk-test-drivers
-           path: /tmp/test-drivers
-           ref: master
-           token: ${{ inputs.github-pat }}
-
+         
     - name: Installing the test runner
       shell: bash
       env:
@@ -154,5 +122,5 @@ runs:
         bash ${{ inputs.assets-dir }}/scripts/test.sh
     
     - id: output-sdk-dir
-      run: echo "::set-output name=sdk-dir::/tmp/${{ inputs.sdk-name }}"
       shell: bash
+      run: echo "::set-output name=sdk-dir::/tmp/${{ inputs.sdk-name }}"
