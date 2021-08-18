@@ -96,7 +96,7 @@ runs:
         ionossdk generate \
         --name ${{ inputs.sdk-name }} \
         --spec /tmp/swagger.json \
-        --assets-dir ${{ inputs.assets-dir }} \
+        --assets-dir ${GITHUB_WORKSPACE}/${{ inputs.assets-dir }} \
         --version ${{ inputs.version }} \
         --output-dir /tmp/${{ inputs.sdk-name }} \
         --build --debug
