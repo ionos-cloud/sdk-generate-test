@@ -16,7 +16,7 @@ inputs:
   ionos-vdc-password:
     description: 'Ionos Cloud password'
     required: true
-  codex-bucket:
+  codex-s3-bucket:
     description: 'codex bucket to use'
     required: true
   codex-s3-key:

@@ -9,7 +9,7 @@ This is a github action used for generating and testing Ionos Cloud SDKs.
 | version   | sdk version | yes      |               |
 | ionos-vdc-user | Ionos Cloud user to use for tests | yes | |
 | ionos-vdc-password | Ionos Cloud password to use for tests | yes | |
-| codex-bucket | codex bucked to be used | yes | |
+| codex-s3-bucket | codex bucked to be used | yes | |
 | codex-s3-key | s3 key to use to read from the bucket | yes | | 
 | codex-s3-secret | s3 secret to use to read from the bucket | yes | |
 | node-auth-token | token used for auth with the github npm registry - always use `${{ secrets.GITHUB_TOKEN }}`| yes | |
