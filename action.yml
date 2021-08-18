@@ -1,0 +1,146 @@
+name: 'Ionos Cloud SDK: Generate and Test'
+description: 'Generates and tests an Ionos Cloud SDK'
+
+inputs:
+
+  sdk-name:
+    description: 'name of sdk to generate'
+    required: true 
+  version:  # id of input
+    description: 'version to generate'
+    required: true
+    default: 'v6.0.0'
+  ionos-vdc-user:
+    description: 'Ionos Cloud username'
+    required: true
+  ionos-vdc-password:
+    description: 'Ionos Cloud password'
+    required: true
+  codex-bucket:
+    description: 'codex bucket to use'
+    required: true
+  codex-s3-key:
+    description: 'codex s3 key to access the bucket'
+    required: true
+  codex-s3-secret:
+    description: 'codex s3 secret to access the bucket'
+    required: true
+  github-pat:
+    description: 'github personal access token used to clone the sdk repositories'
+    required: true
+  assets-dir: 
+    description: 'assets directory'
+    required: true
+  test-driver:
+    description: 'test driver to use'
+    required: true
+  test-suite:
+    description: 'test suite to run'
+    required: true
+  test-dir:
+    description: 'directory holding tests'
+    required: true
+  test-runner-args:
+    description: 'extra args to pass to the test runner'
+    required: false
+    default: '--fail-fast --batch'
+  java-version: 
+    description: 'java version to use'
+    default: 1.8
+    required: false
+  node-version:
+    description: 'node version to use'
+    required: false
+    default: 16
+
+
+outputs:
+  sdk-dir:
+    description: "Directory with the generated SDK"
+    value: ${{ steps.output-sdk-dir.outputs.sdk-dir }}
+
+runs:
+       
+  using: "composite"
+  steps:
+
+    - name: Setting up Node
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{inputs.node-version}}
+        registry-url: https://npm.pkg.github.com/
+        scope: '@ionos-cloud'
+
+    - name: Setting up JDK ${{ inputs.java-version }}
+      uses: actions/setup-java@v1
+      with:
+        java-version: ${{ inputs.java-version }}
+          
+    - name: Installing the Codex
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        npm install -g @ionos-cloud/codex
+        codex config s3.key ${{ inputs.codex-s3-key }}
+        codex config s3.secret ${{ inputs.codex-s3-secret }}
+        codex config s3.bucket ${{ inputs.codex-s3-bucket }}
+
+    - name: Installing ionossdk
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        npm install -g @ionos-cloud/ionossdk
+
+    - name: Compiling the Codex
+      run: codex compile -o /tmp/swagger.json --debug
+
+    - name: Checkout the SDK
+      uses: actions/checkout@v2
+      with:
+          repository: ionos-cloud/${{ inputs.sdk-name }}
+          path: /tmp/${{ inputs.sdk-name }}
+          ref: master
+          token: ${{ inputs.github-pat }}
+
+    - name: Generate the SDK
+      shell: bash
+      run: |-
+        ionossdk generate \
+        --name ${{ inputs.sdk-name }} \
+        --spec /tmp/swagger.json \
+        --assets-dir ${{ inputs.assets-dir }} \
+        --version ${{ inputs.version }} \
+        --output-dir /tmp/${{ inputs.sdk-name }} \
+        --build --debug
+
+    - name: Checking out test drivers
+      uses: actions/checkout@v2
+      with:
+           repository: ionos-cloud/sdk-test-drivers
+           path: /tmp/test-drivers
+           ref: master
+           token: ${{ secrets.github-pat }}
+
+    - name: Installing the test runner
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        npm install -g @ionos-cloud/test-runner
+
+    - name: Testing the SDK
+      shell: bash
+      working-directory: ${{ inputs.test-dir }}
+      env:
+        IONOS_SDK_DIR: /tmp/${{ inputs.sdk-name }}
+        IONOS_SDK_VERSION: ${{ inputs.version }}
+        IONOS_SDK_TEST_DRIVER_DIR: /tmp/test-drivers/${{ inputs.test-driver }}
+        IONOS_SDK_TEST_SUITE: ${{ inputs.test-suite }}
+        IONOS_USERNAME: ${{ inputs.ionos-vdc-user }}
+        IONOS_PASSWORD: ${{ inputs.ionos-vdc-password }}
+        IONOS_SDK_TEST_RUNNER_ARGS: ${{ inputs.test-runner-args }}
+      run: |-
+        bash ${{ inputs.assets-dir }}/scripts/test.sh
+    
+    - id: output-sdk-dir
+      run: echo "::set-output name=sdk-dir::/tmp/${{ inputs.sdk-name }}"
+      shell: bash
