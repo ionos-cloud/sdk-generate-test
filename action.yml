@@ -5,7 +5,11 @@ inputs:
 
   sdk-name:
     description: 'name of sdk to generate'
-    required: true 
+    required: true
+  sdk-branch:
+    description: 'name of branch where to generate the sdk'
+    required: false
+    default: master
   version:  # id of input
     description: 'version to generate'
     required: true
@@ -70,6 +74,7 @@ runs:
       shell: bash
       env:
         IONOS_SDK_NAME: ${{ inputs.sdk-name }}
+        IONOS_SDK_BRANCH: ${{ inputs.sdk-branch }}
         GITHUB_PAT: ${{ inputs.github-pat }}
       run: |
         echo "::group::Cloning repositories"
