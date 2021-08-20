@@ -137,7 +137,17 @@ runs:
         --output-dir /tmp/${{ inputs.sdk-name }} \
         --build --debug
         echo "::endgroup::"
-    
+   
+    - name: Setting up ionossdk env
+      shell: bash
+      run: |-
+        ionossdk env \
+        --name ${{ inputs.sdk-name }} \
+        --spec /tmp/swagger.json \
+        --assets-dir ${GITHUB_WORKSPACE}/${{ inputs.assets-dir }} \
+        --version ${{ inputs.version }} \
+        --output-dir /tmp/${{ inputs.sdk-name }} >> $GITHUB_ENV
+
     - name: Installing the test runner
       shell: bash
       env:
@@ -165,12 +175,7 @@ runs:
       run: |-
         if [ "${{ inputs.test }}" == "true" ]; then
           echo "::group::Running tests"
-          bash eval $(ionossdk env \\ 
-          --name ${{ inputs.sdk-name }} \\
-          --spec /tmp/swagger.json \\
-          --assets-dir ${GITHUB_WORKSPACE}/${{ inputs.assets-dir }} \\
-          --version ${{ inputs.version }} \\
-          --output-dir /tmp/${{ inputs.sdk-name }} | xargs) ${GITHUB_WORKSPACE}/${{ inputs.assets-dir }}/scripts/test.sh
+          bash ${GITHUB_WORKSPACE}/${{ inputs.assets-dir }}/scripts/test.sh
           echo "::endgroup::"
         else
           echo "::group::Skipping tests"
