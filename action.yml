@@ -175,6 +175,7 @@ runs:
       run: |-
         if [ "${{ inputs.test }}" == "true" ]; then
           echo "::group::Running tests"
+          env | grep IONOS_SDK
           bash ${GITHUB_WORKSPACE}/${{ inputs.assets-dir }}/scripts/test.sh
           echo "::endgroup::"
         else
