@@ -66,7 +66,7 @@ if [ "${version_first_char}" = "v" ]; then
 fi
 
 
-git ls-remote --tags origin | grep refs/tags/${tag_name}$ 2>&1 >/dev/null 
+git ls-remote --tags origin | grep refs/tags/${tag_name}$ 2>&1 >/dev/null
 if [ "$?" = "0" ]; then
 	error "tag ${tag_name} already exists"
 	exit 1
@@ -143,3 +143,9 @@ else
 	info "no older versions found"
 fi
 
+
+cp docs/ /home/runner/work/sdk-resources/sdk-resources/twt-reference-documentation/general-information/sdks/compute-python-sdk/ -r
+cd /home/runner/work/sdk-resources/sdk-resources/twt-reference-documentation
+
+git commit --allow-empty -m "auto-generated version ${version}" >/dev/null || exit 1
+git push >/dev/null || exit 1
