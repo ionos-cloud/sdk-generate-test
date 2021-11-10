@@ -145,7 +145,4 @@ fi
 
 
 cp docs/ /home/runner/work/sdk-resources/sdk-resources/twt-reference-documentation/general-information/sdks/compute-python-sdk/ -r
-cd /home/runner/work/sdk-resources/sdk-resources/twt-reference-documentation
-
-git commit --allow-empty -m "auto-generated version ${version}" >/dev/null || exit 1
-git push >/dev/null || exit 1
+./push-documentation.sh ${version}
