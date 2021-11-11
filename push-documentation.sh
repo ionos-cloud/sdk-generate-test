@@ -31,7 +31,5 @@ info "using git committer email: ${committer_email}"
 git config --local user.name "${committer_name}" >/dev/null || exit 1
 git config --local user.email ${committer_email} >/dev/null || exit 1
 
-cd /home/runner/work/sdk-resources/sdk-resources/twt-reference-documentation
-
 git commit --allow-empty -m "auto-generated version ${version}" >/dev/null || exit 1
 git push >/dev/null || exit 1

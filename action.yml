@@ -35,8 +35,11 @@ inputs:
   github-pat:
     description: 'github personal access token used to clone the sdk repositories'
     required: true
-  assets-dir: 
+  assets-dir:
     description: 'assets directory'
+    required: true
+  documentation-dir:
+    description: 'directory where to push the Gitbook documentation'
     required: true
   test:
     description: 'whether to run tests or not'
@@ -66,7 +69,7 @@ outputs:
     value: ${{ steps.output-sdk-dir.outputs.sdk-dir }}
 
 runs:
-       
+
   using: "composite"
   steps:
 
@@ -96,7 +99,7 @@ runs:
           echo "::endgroup::"
         fi
 
-        
+
     - name: Installing the Codex
       shell: bash
       env:
@@ -137,7 +140,7 @@ runs:
         --output-dir /tmp/${{ inputs.sdk-name }} \
         --build --debug
         echo "::endgroup::"
-   
+
     - name: Setting up ionossdk env
       shell: bash
       run: |-
@@ -196,6 +199,23 @@ runs:
           echo "::group::Skipping git tag and branch"
           echo "::endgroup::"
         fi
+
+    - name: Copy documentation
+      working-directory: /tmp/${{ inputs.sdk-name }}
+      shell: bash
+      run: |-
+        echo "::group::Creating git tag and branch (if needed)"
+        cp /tmp/${{ inputs.sdk-name }}/docs ${{ inputs.documentation-dir }}/general-information/sdks/compute-${{ inputs.sdk-name }}/ -r
+        echo "::endgroup::"
+
+
+    - name: Push documentation
+      working-directory: ${{ inputs.documentation-dir }}
+      shell: bash
+      run: |-
+        echo "::group::Pushing documentation to the portal repo"
+        bash ${{ github.action_path }}/push-documentation.sh ${{ inputs.version }}
+        echo "::endgroup::"
 
 
     - id: output-sdk-dir

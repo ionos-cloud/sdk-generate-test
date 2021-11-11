@@ -142,7 +142,3 @@ if [ "${old_version}" != "" ]; then
 else
 	info "no older versions found"
 fi
-
-
-cp docs/ /home/runner/work/sdk-resources/sdk-resources/twt-reference-documentation/general-information/sdks/compute-python-sdk/ -r
-./push-documentation.sh ${version}
