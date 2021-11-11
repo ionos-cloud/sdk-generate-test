@@ -201,10 +201,11 @@ runs:
         fi
 
     - name: Copy documentation
-      working-directory: /tmp/${{ inputs.sdk-name }}
       shell: bash
       run: |-
         echo "::group::Copying documentation"
+        pwd
+        ls -R
         cp /tmp/${{ inputs.sdk-name }}/docs ${{ inputs.documentation-dir }}/general-information/sdks/compute-${{ inputs.sdk-name }} -r
         echo "::endgroup::"
 
