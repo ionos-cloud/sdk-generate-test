@@ -38,6 +38,7 @@ You can do this by adding the following snippet to your workflow:
 | sdk-name | name of the sdk to generate | yes | |
 | sdk-branch | name of branch where to generate the sdk | no | master |
 | assets-dir | directory with sdk assets used to generate it | yes | |
+| documentation-dir | directory where to push the Gitbook documentation | no | twt-reference-documentation/general-information/sdks |
 | test | whether to run tests or not | no | true |
 | test-driver | test driver to use | yes | |
 | test-suite | test suite to use | yes | |
