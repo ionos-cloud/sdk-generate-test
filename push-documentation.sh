@@ -1,7 +1,7 @@
 #!/bin/sh
 
 program="${0}"
-sdk_name ="${1}"
+sdk_name="${1}"
 version="${2}"
 
 committer_name=${COMMITTER_NAME:-"Ionos Cloud SDK Robot"}
