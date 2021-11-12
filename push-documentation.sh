@@ -1,7 +1,8 @@
 #!/bin/sh
 
 program="${0}"
-version="${1}"
+sdk_name ="${1}"
+version="${2}"
 
 committer_name=${COMMITTER_NAME:-"Ionos Cloud SDK Robot"}
 committer_email=${COMMITTER_EMAIL:-"sdk@cloud.ionos.com"}
@@ -36,5 +37,5 @@ git config --local user.email ${committer_email} >/dev/null || exit 1
 
 git add . >/dev/null || exit 1
 
-git commit --allow-empty -m "auto-generated version ${version}" >/dev/null || exit 1
+git commit --allow-empty -m "Auto-generated documentation for ${sdk_name} ${version}" >/dev/null || exit 1
 git push >/dev/null || exit 1
