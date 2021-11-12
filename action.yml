@@ -40,7 +40,8 @@ inputs:
     required: true
   documentation-dir:
     description: 'directory where to push the Gitbook documentation'
-    required: true
+    required: false
+    default: 'twt-reference-documentation/general-information/sdks'
   test:
     description: 'whether to run tests or not'
     required: false
@@ -204,15 +205,7 @@ runs:
       shell: bash
       run: |-
         echo "::group::Copying documentation"
-        echo "Current working directory:"
-        pwd
-        echo "Content of the working directory:"
-        ls
-        cp /tmp/${{ inputs.sdk-name }}/docs/* ${{ inputs.documentation-dir }}/general-information/sdks/compute-${{ inputs.sdk-name }} -r
-        echo "Generated docs:"
-        ls /tmp/${{ inputs.sdk-name }}/docs
-        echo "Copied docs:"
-        ls  ${{ inputs.documentation-dir }}/general-information/sdks/compute-${{ inputs.sdk-name }}
+        cp /tmp/${{ inputs.sdk-name }}/docs/* ${{ inputs.documentation-dir }}/compute-${{ inputs.sdk-name }} -r
         echo "::endgroup::"
 
 

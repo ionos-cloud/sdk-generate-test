@@ -1,5 +1,8 @@
 #!/bin/sh
 
+program="${0}"
+version="${1}"
+
 committer_name=${COMMITTER_NAME:-"Ionos Cloud SDK Robot"}
 committer_email=${COMMITTER_EMAIL:-"sdk@cloud.ionos.com"}
 
