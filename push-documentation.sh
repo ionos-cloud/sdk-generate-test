@@ -8,7 +8,7 @@ committer_name=${COMMITTER_NAME:-"Ionos Cloud SDK Robot"}
 committer_email=${COMMITTER_EMAIL:-"sdk@cloud.ionos.com"}
 
 function usage() {
-	echo "usage: ${program} <version>"
+	echo "usage: ${program} <sdk_name> <version>"
 }
 
 function error() {
