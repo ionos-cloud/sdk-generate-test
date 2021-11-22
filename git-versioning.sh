@@ -142,3 +142,4 @@ else
   info "pushing tags and changes ..."
   git push >/dev/null || exit 1
   git push --tags >/dev/null || exit 1
+fi
