@@ -116,7 +116,7 @@ runs:
       run: |
         echo "::group::Installing ionossdk"
         npm install -g @ionos-cloud/ionossdk
-        npm list
+        npm -g list
         echo "::endgroup::"
 
     - name: Compiling the Codex
