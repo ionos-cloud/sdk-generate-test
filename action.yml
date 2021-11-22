@@ -35,7 +35,7 @@ inputs:
   github-pat:
     description: 'github personal access token used to clone the sdk repositories'
     required: true
-  assets-dir: 
+  assets-dir:
     description: 'assets directory'
     required: true
   test:
@@ -66,7 +66,7 @@ outputs:
     value: ${{ steps.output-sdk-dir.outputs.sdk-dir }}
 
 runs:
-       
+
   using: "composite"
   steps:
 
@@ -96,7 +96,7 @@ runs:
           echo "::endgroup::"
         fi
 
-        
+
     - name: Installing the Codex
       shell: bash
       env:
@@ -116,6 +116,7 @@ runs:
       run: |
         echo "::group::Installing ionossdk"
         npm install -g @ionos-cloud/ionossdk
+        npm list
         echo "::endgroup::"
 
     - name: Compiling the Codex
@@ -137,7 +138,7 @@ runs:
         --output-dir /tmp/${{ inputs.sdk-name }} \
         --build --debug
         echo "::endgroup::"
-   
+
     - name: Setting up ionossdk env
       shell: bash
       run: |-
