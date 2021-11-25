@@ -101,7 +101,7 @@ old_version=$(git tag --list "v*" --sort=refname | tail -n 1)
 
 info "checking if the major is 6 ..."
 if [ "${major}" -eq "6" ]; then
-  info "starting version 6 release..."
+  info "starting the release on the release/v6 branch..."
 
   # create release branch, if it does not exist
   branch_name="release/v6"
@@ -128,7 +128,7 @@ if [ "${major}" -eq "6" ]; then
 
 
 else
-  info "starting version 5 release ..."
+  info "starting the release on the master branch ..."
 
   info "committing latest changes ..."
   git add . >/dev/null || exit 1
