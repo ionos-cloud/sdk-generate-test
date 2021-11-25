@@ -66,7 +66,7 @@ if [ "${version_first_char}" = "v" ]; then
 fi
 
 
-git ls-remote --tags origin | grep refs/tags/${tag_name}$ 2>&1 >/dev/null 
+git ls-remote --tags origin | grep refs/tags/${tag_name}$ 2>&1 >/dev/null
 if [ "$?" = "0" ]; then
 	error "tag ${tag_name} already exists"
 	exit 1
@@ -99,47 +99,47 @@ git tag --list "v*" --sort=refname | tail -n 1
 
 old_version=$(git tag --list "v*" --sort=refname | tail -n 1)
 
-info "committing latest changes ..."
+info "checking if the major is 6 ..."
+if [ "${major}" -eq "6" ]; then
+  info "starting the release on the release/v6 branch..."
 
-git add . >/dev/null || exit 1
+  # create release branch, if it does not exist
+  branch_name="release/v6"
+  git branch -a | grep ${branch_name}
+  if [ "$?" = "0" ]; then
+    info "the "${branch_name}" branch already exists"
+    git checkout "${branch_name}" >/dev/null || exit 1
+  else
+    git checkout -b "${branch_name}" >/dev/null || exit 1
+  fi
 
-git commit --allow-empty -m "auto-generated version ${version}" >/dev/null || exit 1
+  info "committing latest changes ..."
+  git add . >/dev/null || exit 1
+  git commit --allow-empty -m "auto-generated version ${version}" >/dev/null || exit 1
 
-# create version tag
-info "creating version tag ..."
-git tag ${tag_name} >/dev/null || exit 1
+  info "pushing the changes ..."
+  git push -u origin "${branch_name}" >/dev/null || exit 1
 
-info "pushing tags and changes ..."
-git push >/dev/null || exit 1
-git push --tags >/dev/null || exit 1
+  info "creating version tag ..."
+  git tag ${tag_name} >/dev/null || exit 1
 
-info "checking if we have a new major or minor version ..."
-if [ "${old_version}" != "" ]; then
-	info "found older version ${old_version}"
-	old_major=$(get_major "${old_version}")
-	old_minor=$(get_minor "${old_version}")
-	info "old major: ${old_major} / old minor: is ${old_minor} / current major: ${major} / current minor: ${minor}"
-	if [ "${old_major}" != "" -a "${old_minor}" != "" ]; then
-	   	if [ "${old_major}" != "${major}" -o "${old_minor}" != "${minor}" ]; then
-			# create release branch for old version from the old version tag
-			branch_name="release/${old_major}.${old_minor}.x"
-			git branch -a | grep ${branch_name}
-			if [ "$?" = "0" ]; then
-				warning "a release branch ${branch_name} already exists"
-			else
-				info "creating a new release branch: ${branch_name}"
-				git checkout ${old_version} >/dev/null || exit 1
-				git checkout -b "${branch_name}" >/dev/null || exit 1
-				git push -u origin ${branch_name} >/dev/null || exit 1
-				git checkout master >/dev/null || exit 1
-			fi
-		else
-			info "no new release branch needed"
-		fi
-	else
-		info "could not compute old major or old minor versions"
-	fi
+  info "pushing the tag ..."
+  git push --tags >/dev/null || exit 1
+
+
 else
-	info "no older versions found"
-fi
+  info "starting the release on the master branch ..."
 
+  info "committing latest changes ..."
+  git add . >/dev/null || exit 1
+
+  git commit --allow-empty -m "auto-generated version ${version}" >/dev/null || exit 1
+
+  # create version tag
+  info "creating version tag ..."
+  git tag ${tag_name} >/dev/null || exit 1
+
+  info "pushing tags and changes ..."
+  git push >/dev/null || exit 1
+  git push --tags >/dev/null || exit 1
+fi
