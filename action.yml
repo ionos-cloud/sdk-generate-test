@@ -9,7 +9,6 @@ inputs:
   sdk-branch:
     description: 'name of branch where to generate the sdk'
     required: false
-    default: master
   version:  # id of input
     description: 'version to generate'
     required: true
