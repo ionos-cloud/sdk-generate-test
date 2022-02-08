@@ -112,6 +112,7 @@ if [ "$?" = "0" ]; then
   info "the "${sdk_branch}" branch already exists"
   git checkout "${sdk_branch}" >/dev/null || exit 1
 else
+  info "creating "${sdk_branch}" branch ..."
   git checkout -b "${sdk_branch}" >/dev/null || exit 1
 fi
 

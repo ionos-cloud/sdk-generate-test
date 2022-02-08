@@ -8,7 +8,7 @@ inputs:
     required: true
   sdk-branch:
     description: 'name of branch where to generate the sdk'
-    required: false
+    required: true
   version:  # id of input
     description: 'version to generate'
     required: true
