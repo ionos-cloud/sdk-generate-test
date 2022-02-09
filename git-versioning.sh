@@ -2,12 +2,13 @@
 
 program="${0}"
 version="${1}"
+sdk_branch="${2}"
 
 committer_name=${COMMITTER_NAME:-"Ionos Cloud SDK Robot"}
 committer_email=${COMMITTER_EMAIL:-"sdk@cloud.ionos.com"}
 
 function usage() {
-	echo "usage: ${program} <version>"
+	echo "usage: ${program} <version> <sdk_branch>"
 }
 
 function error() {
@@ -42,6 +43,12 @@ function get_minor() {
 
 if [ "${version}" = "" ]; then
 	error "version not specified"
+	usage
+	exit 1
+fi
+
+if [ "${sdk_branch}" = "" ]; then
+	error "sdk_branch not specified"
 	usage
 	exit 1
 fi
@@ -99,47 +106,25 @@ git tag --list "v*" --sort=refname | tail -n 1
 
 old_version=$(git tag --list "v*" --sort=refname | tail -n 1)
 
-info "checking if the major is 6 ..."
-if [ "${major}" -eq "6" ]; then
-  info "starting the release on the release/v6 branch..."
-
-  # create release branch, if it does not exist
-  branch_name="release/v6"
-  git branch -a | grep ${branch_name}
-  if [ "$?" = "0" ]; then
-    info "the "${branch_name}" branch already exists"
-    git checkout "${branch_name}" >/dev/null || exit 1
-  else
-    git checkout -b "${branch_name}" >/dev/null || exit 1
-  fi
-
-  info "committing latest changes ..."
-  git add . >/dev/null || exit 1
-  git commit --allow-empty -m "auto-generated version ${version}" >/dev/null || exit 1
-
-  info "pushing the changes ..."
-  git push -u origin "${branch_name}" >/dev/null || exit 1
-
-  info "creating version tag ..."
-  git tag ${tag_name} >/dev/null || exit 1
-
-  info "pushing the tag ..."
-  git push --tags >/dev/null || exit 1
-
-
+info "starting the release on the ${sdk_branch} branch..."
+git branch -a | grep ${sdk_branch}
+if [ "$?" = "0" ]; then
+  info "the "${sdk_branch}" branch already exists"
+  git checkout "${sdk_branch}" >/dev/null || exit 1
 else
-  info "starting the release on the master branch ..."
-
-  info "committing latest changes ..."
-  git add . >/dev/null || exit 1
-
-  git commit --allow-empty -m "auto-generated version ${version}" >/dev/null || exit 1
-
-  # create version tag
-  info "creating version tag ..."
-  git tag ${tag_name} >/dev/null || exit 1
-
-  info "pushing tags and changes ..."
-  git push >/dev/null || exit 1
-  git push --tags >/dev/null || exit 1
+  info "creating "${sdk_branch}" branch ..."
+  git checkout -b "${sdk_branch}" >/dev/null || exit 1
 fi
+
+info "committing latest changes ..."
+git add . >/dev/null || exit 1
+git commit --allow-empty -m "auto-generated version ${version}" >/dev/null || exit 1
+
+info "pushing the changes ..."
+git push -u origin "${sdk_branch}" >/dev/null || exit 1
+
+info "creating version tag ..."
+git tag ${tag_name} >/dev/null || exit 1
+
+info "pushing the tag ..."
+git push --tags >/dev/null || exit 1

@@ -36,7 +36,7 @@ You can do this by adding the following snippet to your workflow:
 | node-auth-token | token used for auth with the github npm registry - always use `${{ secrets.GITHUB_TOKEN }}`| yes | |
 | github-pat | github personal access token to use to clone the sdk repo | yes | |
 | sdk-name | name of the sdk to generate | yes | |
-| sdk-branch | name of branch where to generate the sdk | no | master |
+| sdk-branch | name of branch where to generate the sdk | yes |  |
 | assets-dir | directory with sdk assets used to generate it | yes | |
 | test | whether to run tests or not | no | true |
 | test-driver | test driver to use | yes | |

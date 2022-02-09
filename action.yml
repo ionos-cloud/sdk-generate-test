@@ -8,8 +8,7 @@ inputs:
     required: true
   sdk-branch:
     description: 'name of branch where to generate the sdk'
-    required: false
-    default: master
+    required: true
   version:  # id of input
     description: 'version to generate'
     required: true
@@ -190,7 +189,7 @@ runs:
       run: |-
         if [ "${{ inputs.git-versioning }}" == "true" ]; then
           echo "::group::Creating git tag and branch (if needed)"
-          bash ${{ github.action_path }}/git-versioning.sh ${{ inputs.version }}
+          bash ${{ github.action_path }}/git-versioning.sh ${{ inputs.version }} ${{ inputs.sdk-branch }}
           echo "::endgroup::"
         else
           echo "::group::Skipping git tag and branch"
