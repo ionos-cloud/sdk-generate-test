@@ -6,6 +6,10 @@ inputs:
   sdk-name:
     description: 'name of sdk to generate'
     required: true
+  sdk-folder:
+    description: 'name of folder in which to generate the sdk'
+    required: true
+    default: ''
   sdk-branch:
     description: 'name of branch where to generate the sdk'
     required: true
@@ -40,7 +44,7 @@ inputs:
   test:
     description: 'whether to run tests or not'
     required: false
-    default: true
+    default: "true"
   test-driver:
     description: 'test driver to use'
     required: true
@@ -57,7 +61,7 @@ inputs:
   git-versioning:
     description: 'whether to create tags and branches or not'
     required: false
-    default: false
+    default: "false"
 
 outputs:
   sdk-dir:
@@ -133,7 +137,7 @@ runs:
         --spec /tmp/swagger.json \
         --assets-dir ${GITHUB_WORKSPACE}/${{ inputs.assets-dir }} \
         --version ${{ inputs.version }} \
-        --output-dir /tmp/${{ inputs.sdk-name }} \
+        --output-dir /tmp/${{ inputs.sdk-name }}/${{ inputs.sdk-folder }} \
         --build --debug
         echo "::endgroup::"
 
@@ -145,7 +149,7 @@ runs:
         --spec /tmp/swagger.json \
         --assets-dir ${GITHUB_WORKSPACE}/${{ inputs.assets-dir }} \
         --version ${{ inputs.version }} \
-        --output-dir /tmp/${{ inputs.sdk-name }} >> $GITHUB_ENV
+        --output-dir /tmp/${{ inputs.sdk-name }}/${{ inputs.sdk-folder }} >> $GITHUB_ENV
 
     - name: Installing the test runner
       shell: bash
@@ -164,7 +168,7 @@ runs:
       shell: bash
       working-directory: ${{ inputs.test-dir }}
       env:
-        IONOS_SDK_DIR: /tmp/${{ inputs.sdk-name }}
+        IONOS_SDK_DIR: /tmp/${{ inputs.sdk-name }}/${{ inputs.sdk-folder }}
         IONOS_SDK_VERSION: ${{ inputs.version }}
         IONOS_SDK_TEST_DRIVER_DIR: /tmp/test-drivers/${{ inputs.test-driver }}
         IONOS_SDK_TEST_SUITE: ${{ inputs.test-suite }}
@@ -199,4 +203,4 @@ runs:
 
     - id: output-sdk-dir
       shell: bash
-      run: echo "::set-output name=sdk-dir::/tmp/${{ inputs.sdk-name }}"
+      run: echo "::set-output name=sdk-dir::/tmp/${{ inputs.sdk-name }}/${{ inputs.sdk-folder }}"

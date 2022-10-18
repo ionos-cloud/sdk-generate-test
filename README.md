@@ -36,6 +36,7 @@ You can do this by adding the following snippet to your workflow:
 | node-auth-token | token used for auth with the github npm registry - always use `${{ secrets.GITHUB_TOKEN }}`| yes | |
 | github-pat | github personal access token to use to clone the sdk repo | yes | |
 | sdk-name | name of the sdk to generate | yes | |
+| sdk-folder | folder in which to generate the sdk in the new repo | yes | |
 | sdk-branch | name of branch where to generate the sdk | yes |  |
 | assets-dir | directory with sdk assets used to generate it | yes | |
 | test | whether to run tests or not | no | true |
@@ -66,6 +67,7 @@ _Note_: env and inputs are assumed to be set up, as well as node and java.
         uses: ionos-cloud/sdk-generate-test@v2
         with:
           sdk-name: ${{ env.sdk-name }}
+          sdk-folder: ${{ env.sdk-folder }}
           version:  ${{ github.event.inputs.version }}
           sdk-branch: ${{ env.sdk-branch }}
           ionos-vdc-user: ${{ secrets.IONOS_VDC_USER }}
