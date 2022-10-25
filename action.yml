@@ -76,7 +76,7 @@ runs:
     - name: Cloning repositories
       shell: bash
       env:
-        IONOS_SDK_NAME: ${{ inputs.sdk-name }}
+        IONOS_SDK_NAME: ${{ inputs.sdk-name }}/${{ inputs.sdk-folder }}
         IONOS_SDK_BRANCH: ${{ inputs.sdk-branch }}
         GITHUB_PAT: ${{ inputs.github-pat }}
       run: |
@@ -133,7 +133,7 @@ runs:
       run: |-
         echo "::group::Generating the SDK"
         ionossdk generate \
-        --name ${{ inputs.sdk-name }} \
+        --name ${{ inputs.sdk-name }}/${{ inputs.sdk-folder }} \
         --spec /tmp/swagger.json \
         --assets-dir ${GITHUB_WORKSPACE}/${{ inputs.assets-dir }} \
         --version ${{ inputs.version }} \
@@ -145,7 +145,7 @@ runs:
       shell: bash
       run: |-
         ionossdk env \
-        --name ${{ inputs.sdk-name }} \
+        --name ${{ inputs.sdk-name }}/${{ inputs.sdk-folder }} \
         --spec /tmp/swagger.json \
         --assets-dir ${GITHUB_WORKSPACE}/${{ inputs.assets-dir }} \
         --version ${{ inputs.version }} \
@@ -188,7 +188,7 @@ runs:
         fi
 
     - name: Creating git tag and branch
-      working-directory: /tmp/${{ inputs.sdk-name }}
+      working-directory: /tmp/${{ inputs.sdk-name }}/${{ inputs.sdk-folder }}
       shell: bash
       run: |-
         if [ "${{ inputs.git-versioning }}" == "true" ]; then
