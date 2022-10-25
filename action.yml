@@ -76,7 +76,8 @@ runs:
     - name: Cloning repositories
       shell: bash
       env:
-        IONOS_SDK_NAME: ${{ inputs.sdk-name }}/${{ inputs.sdk-folder }}
+        IONOS_SDK_NAME: ${{ inputs.sdk-name }}
+        # IONOS_SDK_FOLDER: ${{ inputs.sdk-folder }}
         IONOS_SDK_BRANCH: ${{ inputs.sdk-branch }}
         GITHUB_PAT: ${{ inputs.github-pat }}
       run: |
