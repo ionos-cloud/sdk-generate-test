@@ -135,6 +135,7 @@ runs:
         echo "::group::Generating the SDK"
         ionossdk generate \
         --name ${{ inputs.sdk-name }} \
+        --package ${{ inputs.sdk-folder }} \
         --spec /tmp/swagger.json \
         --assets-dir ${GITHUB_WORKSPACE}/${{ inputs.assets-dir }} \
         --version ${{ inputs.version }} \
@@ -147,6 +148,7 @@ runs:
       run: |-
         ionossdk env \
         --name ${{ inputs.sdk-name }} \
+        --package ${{ inputs.sdk-folder }} \
         --spec /tmp/swagger.json \
         --assets-dir ${GITHUB_WORKSPACE}/${{ inputs.assets-dir }} \
         --version ${{ inputs.version }} \
