@@ -138,9 +138,9 @@ runs:
         if  [[ "$SDK_FOLDER" =~ "/"  ]]; then
             PATH_ARRAY=(${SDK_FOLDER//// })
             LEN=${#PATH_ARRAY[@]}-1
-            echo "{package-name}={${PATH_ARRAY[LEN]}}" >> $GITHUB_ENV
+            echo "package-name=${PATH_ARRAY[LEN]}" >> $GITHUB_ENV
         else 
-            echo "{package-name}={${$SDK_FOLDER}}" >> $GITHUB_ENV
+            echo "package-name=$SDK_FOLDER" >> $GITHUB_ENV
         fi
         echo "::endgroup::"
     - name: Generating the SDK
