@@ -133,7 +133,7 @@ runs:
       shell: bash
       id: split
       run: |-
-        echo "::group::Splitting if  /"
+        echo "::group::Splitting ${{ inputs.sdk-folder }} on /"
         SDK_FOLDER=${{ inputs.sdk-folder }}
         if  [[ "$SDK_FOLDER" =~ "/"  ]]; then
             PATH_ARRAY=(${SDK_FOLDER//// })
@@ -146,8 +146,9 @@ runs:
     - name: Generating the SDK
       shell: bash
       run: |-
+        DIR="$(dirname "bla/test")"
         ionossdk generate \
-        --name ${{ inputs.sdk-name }} \
+        --name ${{ inputs.sdk-name }}/$DIR \
         --package ${{ env.package-name }} \
         --spec /tmp/swagger.json \
         --assets-dir ${GITHUB_WORKSPACE}/${{ inputs.assets-dir }} \
