@@ -138,21 +138,17 @@ runs:
         if  [[ "$SDK_FOLDER" =~ "/"  ]]; then
             PATH_ARRAY=(${SDK_FOLDER//// })
             LEN=${#PATH_ARRAY[@]}-1
-            echo "{package-name}=${PATH_ARRAY[LEN]}" >> $GITHUB_OUTPUT
+            echo "{package-name}={${PATH_ARRAY[LEN]}}" >> $GITHUB_ENV
         else 
-            echo "{package-name}=${$SDK_FOLDER}" >> $GITHUB_OUTPUT
+            echo "{package-name}={${$SDK_FOLDER}}" >> $GITHUB_ENV
         fi
         echo "::endgroup::"
     - name: Generating the SDK
       shell: bash
       run: |-
-        echo "::group::Split sdk-folder if it contains a forward slash"
-        bash ${{ github.action_path }}/check-tag.sh
-        echo "::endgroup::"
-        echo "::group::Generating the SDK"
         ionossdk generate \
         --name ${{ inputs.sdk-name }} \
-        --package ${{ steps.split.outputs.package-name }} \
+        --package ${{ env.package-name }} \
         --spec /tmp/swagger.json \
         --assets-dir ${GITHUB_WORKSPACE}/${{ inputs.assets-dir }} \
         --version ${{ inputs.version }} \
@@ -165,7 +161,7 @@ runs:
       run: |-
         ionossdk env \
         --name ${{ inputs.sdk-name }} \
-        --package ${{ steps.split.outputs.package-name }} \
+        --package ${{ env.package-name }} \
         --spec /tmp/swagger.json \
         --assets-dir ${GITHUB_WORKSPACE}/${{ inputs.assets-dir }} \
         --version ${{ inputs.version }} \
