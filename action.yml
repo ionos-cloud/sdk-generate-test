@@ -129,13 +129,30 @@ runs:
         codex compile -o /tmp/swagger.json --debug
         echo "::endgroup::"
 
+    - name: Split ${{ inputs.sdk-folder }} if it is a path
+      shell: bash
+      id: split
+      run: |-
+        echo "::group::Splitting if  /"
+        SDK_FOLDER=${{ inputs.sdk-folder }}
+        if  [[ "$SDK_FOLDER" =~ "/"  ]]; then
+            PATH_ARRAY=(${SDK_FOLDER//// })
+            LEN=${#PATH_ARRAY[@]}-1
+            echo "{package-name}=${PATH_ARRAY[LEN]}" >> $GITHUB_OUTPUT
+        else 
+            echo "{package-name}=${$SDK_FOLDER}" >> $GITHUB_OUTPUT
+        fi
+        echo "::endgroup::"
     - name: Generating the SDK
       shell: bash
       run: |-
+        echo "::group::Split sdk-folder if it contains a forward slash"
+        bash ${{ github.action_path }}/check-tag.sh
+        echo "::endgroup::"
         echo "::group::Generating the SDK"
         ionossdk generate \
         --name ${{ inputs.sdk-name }} \
-        --package ${{ inputs.sdk-folder }} \
+        --package ${{ steps.split.outputs.package-name }} \
         --spec /tmp/swagger.json \
         --assets-dir ${GITHUB_WORKSPACE}/${{ inputs.assets-dir }} \
         --version ${{ inputs.version }} \
@@ -148,7 +165,7 @@ runs:
       run: |-
         ionossdk env \
         --name ${{ inputs.sdk-name }} \
-        --package ${{ inputs.sdk-folder }} \
+        --package ${{ steps.split.outputs.package-name }} \
         --spec /tmp/swagger.json \
         --assets-dir ${GITHUB_WORKSPACE}/${{ inputs.assets-dir }} \
         --version ${{ inputs.version }} \
