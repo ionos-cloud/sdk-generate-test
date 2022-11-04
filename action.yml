@@ -220,4 +220,4 @@ runs:
 
     - id: output-sdk-dir
       shell: bash
-      run: echo "::set-output name=sdk-dir::/tmp/${{ inputs.sdk-name }}/${{ inputs.sdk-folder }}"
+      run: echo "sdk-dir=/tmp/${{ inputs.sdk-name }}/${{ inputs.sdk-folder }}" >> $GITHUB_OUTPUT
