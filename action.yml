@@ -146,7 +146,7 @@ runs:
     - name: Generating the SDK
       shell: bash
       run: |-
-        DIR="$(dirname "bla/test")"
+        DIR="$(dirname "${{ inputs.sdk-folder }}")"
         ionossdk generate \
         --name ${{ inputs.sdk-name }}/$DIR \
         --package ${{ env.package-name }} \
