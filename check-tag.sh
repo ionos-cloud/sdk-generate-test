@@ -13,7 +13,7 @@ function error() {
 
 version=${IONOS_SDK_VERSION}
 
-tag_name="v${version}"
+tag_name="${version}"
 version_first_char=$(echo "${version}" | cut -c1-1)
 if [ "${version_first_char}" = "v" ]; then
 	# strip the v from the major component
