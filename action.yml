@@ -153,7 +153,6 @@ runs:
           DIR=${{ inputs.sdk-name }}/"$(dirname "${{ inputs.sdk-folder }}")"
           PKGNAME=${{ env.package-name }}
         fi
-        
         ionossdk generate \
         --name $DIR \
         --package $PKGNAME \
@@ -167,9 +166,16 @@ runs:
     - name: Setting up ionossdk env
       shell: bash
       run: |-
+        if  [[  -z "${{ env.package-name }}" ]]; then
+          DIR=${{ inputs.sdk-name }}
+          PKGNAME=ionoscloud
+        else 
+          DIR=${{ inputs.sdk-name }}/"$(dirname "${{ inputs.sdk-folder }}")"
+          PKGNAME=${{ env.package-name }}
+        fi
         ionossdk env \
-        --name ${{ inputs.sdk-name }} \
-        --package ${{ env.package-name }} \
+        --name $DIR \
+        --package $PKGNAME \
         --spec /tmp/swagger.json \
         --assets-dir ${GITHUB_WORKSPACE}/${{ inputs.assets-dir }} \
         --version ${{ inputs.version }} \
