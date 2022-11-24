@@ -148,15 +148,15 @@ runs:
       run: |-
         if  [[  -z "${{ env.package-name }}" ]]; then
           DIR=${{ inputs.sdk-name }}
-          ${{env.package-name}}="ionoscloud" 
+          PKGNAME=ionoscloud
         else 
-          DIR=${{ inputs.sdk-name }}/"$(dirname "${{ inputs.sdk-folder }}")"  
-            
-        fi 
+          DIR=${{ inputs.sdk-name }}/"$(dirname "${{ inputs.sdk-folder }}")"
+          PKGNAME=${{ env.package-name }}
+        fi
         
         ionossdk generate \
         --name $DIR \
-        --package ${{ env.package-name }} \
+        --package $PKGNAME \
         --spec /tmp/swagger.json \
         --assets-dir ${GITHUB_WORKSPACE}/${{ inputs.assets-dir }} \
         --version ${{ inputs.version }} \
