@@ -146,9 +146,16 @@ runs:
     - name: Generating the SDK
       shell: bash
       run: |-
-        DIR="$(dirname "${{ inputs.sdk-folder }}")"
+        if  [[  -z "${{ env.package-name }}" ]]; then
+          DIR=${{ inputs.sdk-name }}
+          ${{env.package-name}}="ionoscloud" 
+        else 
+          DIR=${{ inputs.sdk-name }}/"$(dirname "${{ inputs.sdk-folder }}")"  
+            
+        fi 
+        
         ionossdk generate \
-        --name ${{ inputs.sdk-name }}/$DIR \
+        --name $DIR \
         --package ${{ env.package-name }} \
         --spec /tmp/swagger.json \
         --assets-dir ${GITHUB_WORKSPACE}/${{ inputs.assets-dir }} \
