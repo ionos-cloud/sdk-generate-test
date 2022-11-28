@@ -65,7 +65,7 @@ if [ "${minor}" = "" ]; then
 	exit 1
 fi
 
-tag_name="v${version}"
+tag_name="${version}"
 version_first_char=$(echo "${version}" | cut -c1-1)
 if [ "${version_first_char}" = "v" ]; then
 	# strip the v from the major component
