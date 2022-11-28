@@ -134,20 +134,21 @@ runs:
       id: split
       run: |-
         echo "::group::Splitting ${{ inputs.sdk-folder }} on /"
-        SDK_FOLDER=${{ inputs.sdk-folder }}
-        if  [[  -z "$SDK_FOLDER" ]]; then
+        
+        if  [[  -z "${{ inputs.sdk-folder }}" ]]; then
           echo "package-name=ionoscloud" >> $GITHUB_ENV
           echo "name=${{ inputs.sdk-name }}" >> $GITHUB_ENV
-        else if  [[ "$SDK_FOLDER" =~ "/"  ]]; then
-            PATH_ARRAY=(${SDK_FOLDER//// })
-            LEN=${#PATH_ARRAY[@]}-1
-            DIR=${{ inputs.sdk-name }}/"$(dirname "$SDK_FOLDER")"
-            echo "name=$DIR" >> $GITHUB_ENV
-            echo "package-name=${PATH_ARRAY[LEN]}" >> $GITHUB_ENV
+        else if  [[ "${{ inputs.sdk-folder }}" =~ "/"  ]]; then
+          SDK_FOLDER=${{ inputs.sdk-folder }}
+          PATH_ARRAY=(${SDK_FOLDER//// })
+          LEN=${#PATH_ARRAY[@]}-1
+          DIR=${{ inputs.sdk-name }}/"$(dirname "$SDK_FOLDER")"
+          echo "name=$DIR" >> $GITHUB_ENV
+          echo "package-name=${PATH_ARRAY[LEN]}" >> $GITHUB_ENV
         else
-            echo "package-name=$SDK_FOLDER" >> $GITHUB_ENV
-            DIR=${{ inputs.sdk-name }}/"$SDK_FOLDER"
-            echo "name=$DIR" >> $GITHUB_ENV
+          echo "package-name=${{ inputs.sdk-folder }}" >> $GITHUB_ENV
+          DIR=${{ inputs.sdk-name }}/"${{ inputs.sdk-folder }}"
+          echo "name=$DIR" >> $GITHUB_ENV
         fi
         echo "::endgroup::"
     - name: Generating the SDK
