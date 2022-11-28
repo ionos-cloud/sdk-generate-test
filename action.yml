@@ -134,11 +134,10 @@ runs:
       id: split
       run: |-
         echo "::group::Splitting ${{ inputs.sdk-folder }} on /"
-        
         if  [[  -z "${{ inputs.sdk-folder }}" ]]; then
           echo "package-name=ionoscloud" >> $GITHUB_ENV
           echo "name=${{ inputs.sdk-name }}" >> $GITHUB_ENV
-        else if  [[ "${{ inputs.sdk-folder }}" =~ "/"  ]]; then
+        elif  [[ "${{ inputs.sdk-folder }}" =~ "/"  ]]; then
           SDK_FOLDER=${{ inputs.sdk-folder }}
           PATH_ARRAY=(${SDK_FOLDER//// })
           LEN=${#PATH_ARRAY[@]}-1
