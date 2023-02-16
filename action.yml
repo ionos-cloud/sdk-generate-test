@@ -146,7 +146,11 @@ runs:
           echo "package-name=${PATH_ARRAY[LEN]}" >> $GITHUB_ENV
         else
           echo "package-name=${{ inputs.sdk-folder }}" >> $GITHUB_ENV
-          DIR=${{ inputs.sdk-name }}/"${{ inputs.sdk-folder }}"
+          if  [[ "${{ inputs.test-driver }}" == "python" ]]; then
+            DIR=${{ inputs.sdk-name }}
+          else
+            DIR=${{ inputs.sdk-name }}/"${{ inputs.sdk-folder }}"
+          fi
           echo "name=$DIR" >> $GITHUB_ENV
         fi
         echo "::endgroup::"
