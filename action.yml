@@ -160,7 +160,7 @@ runs:
         if  [[ "${{ inputs.test-driver }}" == "python" ]]; then
           DIR=/tmp/${{ inputs.sdk-name }}
         else
-          DIR=/tmp/${{ inputs.sdk-name }}/${{ inputs.sdk-folder }}
+          DIR=/tmp/${{ inputs.sdk-name }}/"${{ inputs.sdk-folder }}"
         fi
         ionossdk generate \
         --name ${{ env.name }} \
