@@ -167,7 +167,7 @@ runs:
         --spec /tmp/swagger.json \
         --assets-dir ${GITHUB_WORKSPACE}/${{ inputs.assets-dir }} \
         --version ${{ inputs.version }} \
-        --output-dir ${{ env.output-dir }} \\
+        --output-dir ${{ env.output-dir }} \
         --build --debug
         echo "::endgroup::"
 
