@@ -157,11 +157,11 @@ runs:
     - name: Generating the SDK
       shell: bash
       run: |-
-        if  [[ "${{ inputs.test-driver }}" == "python" ]]; then
-          DIR=/tmp/${{ inputs.sdk-name }}
-        else
-          DIR=/tmp/${{ inputs.sdk-name }}/${{ inputs.sdk-folder }}
-        fi
+          if  [[ "${{ inputs.test-driver }}" == "python" ]]; then
+            DIR=/tmp/${{ inputs.sdk-name }}
+          else
+            DIR=/tmp/${{ inputs.sdk-name }}/${{ inputs.sdk-folder }}
+          fi
         ionossdk generate \
         --name ${{ env.name }} \
         --package ${{ env.package-name }} \
