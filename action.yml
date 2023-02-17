@@ -137,6 +137,7 @@ runs:
         if  [[  -z "${{ inputs.sdk-folder }}" ]]; then
           echo "package-name=ionoscloud" >> $GITHUB_ENV
           echo "name=${{ inputs.sdk-name }}" >> $GITHUB_ENV
+          echo "output-dir=/tmp/${{ inputs.sdk-name }}/${{ inputs.sdk-folder }}" >> $GITHUB_ENV
         elif  [[ "${{ inputs.sdk-folder }}" =~ "/"  ]]; then
           SDK_FOLDER=${{ inputs.sdk-folder }}
           PATH_ARRAY=(${SDK_FOLDER//// })
@@ -144,12 +145,15 @@ runs:
           DIR=${{ inputs.sdk-name }}/"$(dirname "$SDK_FOLDER")"
           echo "name=$DIR" >> $GITHUB_ENV
           echo "package-name=${PATH_ARRAY[LEN]}" >> $GITHUB_ENV
+          echo "output-dir=/tmp/${{ inputs.sdk-name }}/${{ inputs.sdk-folder }}" >> $GITHUB_ENV
         else
           echo "package-name=${{ inputs.sdk-folder }}" >> $GITHUB_ENV
           if  [[ "${{ inputs.test-driver }}" == "python" ]]; then
             DIR=${{ inputs.sdk-name }}
+            echo "output-dir=/tmp/${{ inputs.sdk-name }}" >> $GITHUB_ENV
           else
             DIR=${{ inputs.sdk-name }}/"${{ inputs.sdk-folder }}"
+            echo "output-dir=/tmp/${{ inputs.sdk-name }}/${{ inputs.sdk-folder }}" >> $GITHUB_ENV
           fi
           echo "name=$DIR" >> $GITHUB_ENV
         fi
@@ -157,18 +161,13 @@ runs:
     - name: Generating the SDK
       shell: bash
       run: |-
-        if  [[ "${{ inputs.test-driver }}" == "python" ]]; then
-          DIR=/tmp/${{ inputs.sdk-name }}
-        else
-          DIR=/tmp/${{ inputs.sdk-name }}/"${{ inputs.sdk-folder }}"
-        fi
         ionossdk generate \
         --name ${{ env.name }} \
         --package ${{ env.package-name }} \
         --spec /tmp/swagger.json \
         --assets-dir ${GITHUB_WORKSPACE}/${{ inputs.assets-dir }} \
         --version ${{ inputs.version }} \
-        --output-dir $DIR \
+        --output-dir ${{ env.output-dir }} \\
         --build --debug
         echo "::endgroup::"
 
@@ -181,7 +180,7 @@ runs:
         --spec /tmp/swagger.json \
         --assets-dir ${GITHUB_WORKSPACE}/${{ inputs.assets-dir }} \
         --version ${{ inputs.version }} \
-        --output-dir /tmp/${{ inputs.sdk-name }}/${{ inputs.sdk-folder }} >> $GITHUB_ENV
+        --output-dir ${{ env.output-dir }} >> $GITHUB_ENV
 
     - name: Installing the test runner
       shell: bash
@@ -200,7 +199,7 @@ runs:
       shell: bash
       working-directory: ${{ inputs.test-dir }}
       env:
-        IONOS_SDK_DIR: /tmp/${{ inputs.sdk-name }}/${{ inputs.sdk-folder }}
+        IONOS_SDK_DIR: ${{ env.output-dir }}
         IONOS_SDK_VERSION: ${{ inputs.version }}
         IONOS_SDK_TEST_DRIVER_DIR: /tmp/test-drivers/${{ inputs.test-driver }}
         IONOS_SDK_TEST_SUITE: ${{ inputs.test-suite }}
@@ -220,7 +219,7 @@ runs:
         fi
 
     - name: Creating git tag and branch
-      working-directory: /tmp/${{ inputs.sdk-name }}/${{ inputs.sdk-folder }}
+      working-directory: ${{ env.output-dir }}
       shell: bash
       run: |-
         if [ "${{ inputs.git-versioning }}" == "true" ]; then
@@ -235,4 +234,4 @@ runs:
 
     - id: output-sdk-dir
       shell: bash
-      run: echo "sdk-dir=/tmp/${{ inputs.sdk-name }}/${{ inputs.sdk-folder }}" >> $GITHUB_OUTPUT
+      run: echo "sdk-dir=${{ env.output-dir }}" >> $GITHUB_OUTPUT
