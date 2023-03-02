@@ -62,7 +62,10 @@ inputs:
     description: 'whether to create tags and branches or not'
     required: false
     default: "false"
-
+  artifact-id:
+    description: 'artifact id '
+    required: false
+    default: ''
 outputs:
   sdk-dir:
     description: "Directory with the generated SDK"
@@ -136,6 +139,7 @@ runs:
         ionossdk generate \
         --name ${{ inputs.sdk-name }} \
         --package ${{ inputs.sdk-folder }} \
+        --artifactID ${{ inputs.artifact-id }} \
         --spec /tmp/swagger.json \
         --assets-dir ${GITHUB_WORKSPACE}/${{ inputs.assets-dir }} \
         --version ${{ inputs.version }} \
@@ -149,6 +153,7 @@ runs:
         ionossdk env \
         --name ${{ inputs.sdk-name }} \
         --package ${{ inputs.sdk-folder }} \
+        --artifactID ${{ inputs.artifact-id }} \
         --spec /tmp/swagger.json \
         --assets-dir ${GITHUB_WORKSPACE}/${{ inputs.assets-dir }} \
         --version ${{ inputs.version }} \
