@@ -27,7 +27,7 @@ You can do this by adding the following snippet to your workflow:
 
 | Parameter | Description | Required | Default Value |
 |-----------|-------------|----------|---------------|
-| version   | sdk version | yes      |               |
+| version   | sdk version | yes      |    V6.0.0     |
 | ionos-vdc-user | Ionos Cloud user to use for tests | yes | |
 | ionos-vdc-password | Ionos Cloud password to use for tests | yes | |
 | codex-s3-bucket | codex bucked to be used | yes | |
@@ -37,6 +37,7 @@ You can do this by adding the following snippet to your workflow:
 | github-pat | github personal access token to use to clone the sdk repo | yes | |
 | sdk-name | name of the sdk to generate | yes | |
 | sdk-folder | folder in which to generate the sdk in the new repo | yes | |
+| artifact-id | artifactId in generated pom.xml. This also becomes part of the generated library's filename | no | |
 | sdk-branch | name of branch where to generate the sdk | yes |  |
 | assets-dir | directory with sdk assets used to generate it | yes | |
 | test | whether to run tests or not | no | true |
