@@ -135,6 +135,8 @@ runs:
     - name: Generating the SDK
       shell: bash
       run: |-
+        packageArg=""
+        artifactArg=""      
         if  [[ ! -z "${{ inputs.sdk-folder }}" ]]; then
           packageArg="--package ${{ inputs.sdk-folder }}"
         fi
@@ -155,6 +157,8 @@ runs:
     - name: Setting up ionossdk env
       shell: bash
       run: |-
+        packageArg=""
+        artifactArg=""
         if  [[ ! -z "${{ inputs.sdk-folder }}" ]]; then
           packageArg="--package ${{ inputs.sdk-folder }}"
         fi
