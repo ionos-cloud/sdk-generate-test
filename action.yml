@@ -135,13 +135,12 @@ runs:
     - name: Generating the SDK
       shell: bash
       run: |-
-        packageArg=""
-        artifactArg=""      
+        echo "::group::Generating the SDK"
         if  [[ ! -z "${{ inputs.sdk-folder }}" ]]; then
-          packageArg="--package ${{ inputs.sdk-folder }}"
+          export IONOSSDK_PACKAGE=${{ inputs.sdk-folder }}
         fi
         if  [[ ! -z "${{ inputs.artifact-id }}" ]]; then
-          artifactArg="--artifactId ${{ inputs.artifact-id }}"
+          export IONOSSDK_ARTIFACTID=${{ inputs.artifact-id }}
         fi
         ionossdk generate \
         --name ${{ inputs.sdk-name }} \
@@ -150,20 +149,17 @@ runs:
         --version ${{ inputs.version }} \
         --output-dir /tmp/${{ inputs.sdk-name }}/${{ inputs.sdk-folder }} \
         --build --debug
-        $packageArg
-        $artifactArg
         echo "::endgroup::"
 
     - name: Setting up ionossdk env
       shell: bash
       run: |-
-        packageArg=""
-        artifactArg=""
+        echo "::group::Setting up ionossdk env"
         if  [[ ! -z "${{ inputs.sdk-folder }}" ]]; then
-          packageArg="--package ${{ inputs.sdk-folder }}"
+          export IONOSSDK_PACKAGE=${{ inputs.sdk-folder }}
         fi
         if  [[ ! -z "${{ inputs.artifact-id }}" ]]; then
-          artifactArg="--artifactId ${{ inputs.artifact-id }}"
+          export IONOSSDK_ARTIFACTID=${{ inputs.artifact-id }}
         fi
         ionossdk env \
         --name ${{ inputs.sdk-name }} \
@@ -171,8 +167,8 @@ runs:
         --assets-dir ${GITHUB_WORKSPACE}/${{ inputs.assets-dir }} \
         --version ${{ inputs.version }} \
         --output-dir /tmp/${{ inputs.sdk-name }}/${{ inputs.sdk-folder }} >> $GITHUB_ENV
-        $packageArg
-        $artifactArg
+        echo "::endgroup::"
+
     - name: Installing the test runner
       shell: bash
       env:
