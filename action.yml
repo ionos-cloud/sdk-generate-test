@@ -137,13 +137,6 @@ runs:
         IONOSSDK_PACKAGE: ${{ inputs.sdk-folder }}
         IONOSSDK_ARTIFACTID: ${{ inputs.artifact-id }}
       run: |-
-        echo "::group::Generating the SDK"
-        # if  [[ ! -z "${{ inputs.sdk-folder }}" ]]; then
-        #   export IONOSSDK_PACKAGE=${{ inputs.sdk-folder }}
-        # fi
-        # if  [[ ! -z "${{ inputs.artifact-id }}" ]]; then
-        #   export IONOSSDK_ARTIFACTID=${{ inputs.artifact-id }}
-        # fi
         ionossdk generate \
         --name ${{ inputs.sdk-name }} \
         --spec /tmp/swagger.json \
@@ -160,12 +153,6 @@ runs:
         IONOSSDK_ARTIFACTID: ${{ inputs.artifact-id }}
       run: |-
         echo "::group::Setting up ionossdk env"
-        # if  [[ ! -z "${{ inputs.sdk-folder }}" ]]; then
-        #   export IONOSSDK_PACKAGE=${{ inputs.sdk-folder }}
-        # fi
-        # if  [[ ! -z "${{ inputs.artifact-id }}" ]]; then
-        #   export IONOSSDK_ARTIFACTID=${{ inputs.artifact-id }}
-        # fi
         ionossdk env \
         --name ${{ inputs.sdk-name }} \
         --spec /tmp/swagger.json \
