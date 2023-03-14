@@ -80,7 +80,6 @@ runs:
       shell: bash
       env:
         IONOS_SDK_NAME: ${{ inputs.sdk-name }}
-        # IONOS_SDK_FOLDER: ${{ inputs.sdk-folder }}
         IONOS_SDK_BRANCH: ${{ inputs.sdk-branch }}
         GITHUB_PAT: ${{ inputs.github-pat }}
       run: |
@@ -134,14 +133,17 @@ runs:
 
     - name: Generating the SDK
       shell: bash
+      env:
+        IONOSSDK_PACKAGE: ${{ inputs.sdk-folder }}
+        IONOSSDK_ARTIFACTID: ${{ inputs.artifact-id }}
       run: |-
         echo "::group::Generating the SDK"
-        if  [[ ! -z "${{ inputs.sdk-folder }}" ]]; then
-          export IONOSSDK_PACKAGE=${{ inputs.sdk-folder }}
-        fi
-        if  [[ ! -z "${{ inputs.artifact-id }}" ]]; then
-          export IONOSSDK_ARTIFACTID=${{ inputs.artifact-id }}
-        fi
+        # if  [[ ! -z "${{ inputs.sdk-folder }}" ]]; then
+        #   export IONOSSDK_PACKAGE=${{ inputs.sdk-folder }}
+        # fi
+        # if  [[ ! -z "${{ inputs.artifact-id }}" ]]; then
+        #   export IONOSSDK_ARTIFACTID=${{ inputs.artifact-id }}
+        # fi
         ionossdk generate \
         --name ${{ inputs.sdk-name }} \
         --spec /tmp/swagger.json \
@@ -153,14 +155,17 @@ runs:
 
     - name: Setting up ionossdk env
       shell: bash
+      env:
+        IONOSSDK_PACKAGE: ${{ inputs.sdk-folder }}
+        IONOSSDK_ARTIFACTID: ${{ inputs.artifact-id }}
       run: |-
         echo "::group::Setting up ionossdk env"
-        if  [[ ! -z "${{ inputs.sdk-folder }}" ]]; then
-          export IONOSSDK_PACKAGE=${{ inputs.sdk-folder }}
-        fi
-        if  [[ ! -z "${{ inputs.artifact-id }}" ]]; then
-          export IONOSSDK_ARTIFACTID=${{ inputs.artifact-id }}
-        fi
+        # if  [[ ! -z "${{ inputs.sdk-folder }}" ]]; then
+        #   export IONOSSDK_PACKAGE=${{ inputs.sdk-folder }}
+        # fi
+        # if  [[ ! -z "${{ inputs.artifact-id }}" ]]; then
+        #   export IONOSSDK_ARTIFACTID=${{ inputs.artifact-id }}
+        # fi
         ionossdk env \
         --name ${{ inputs.sdk-name }} \
         --spec /tmp/swagger.json \
