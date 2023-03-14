@@ -80,7 +80,6 @@ runs:
       shell: bash
       env:
         IONOS_SDK_NAME: ${{ inputs.sdk-name }}
-        # IONOS_SDK_FOLDER: ${{ inputs.sdk-folder }}
         IONOS_SDK_BRANCH: ${{ inputs.sdk-branch }}
         GITHUB_PAT: ${{ inputs.github-pat }}
       run: |
@@ -134,12 +133,13 @@ runs:
 
     - name: Generating the SDK
       shell: bash
+      env:
+      # will be taken by IONOSSDK from env variables
+        IONOSSDK_PACKAGE: ${{ inputs.sdk-folder }}
+        IONOSSDK_ARTIFACTID: ${{ inputs.artifact-id }}
       run: |-
-        echo "::group::Generating the SDK"
         ionossdk generate \
         --name ${{ inputs.sdk-name }} \
-        --package ${{ inputs.sdk-folder }} \
-        --artifactId ${{ inputs.artifact-id }} \
         --spec /tmp/swagger.json \
         --assets-dir ${GITHUB_WORKSPACE}/${{ inputs.assets-dir }} \
         --version ${{ inputs.version }} \
@@ -149,15 +149,18 @@ runs:
 
     - name: Setting up ionossdk env
       shell: bash
+      env:
+        IONOSSDK_PACKAGE: ${{ inputs.sdk-folder }}
+        IONOSSDK_ARTIFACTID: ${{ inputs.artifact-id }}
       run: |-
+        echo "::group::Setting up ionossdk env"
         ionossdk env \
         --name ${{ inputs.sdk-name }} \
-        --package ${{ inputs.sdk-folder }} \
-        --artifactId ${{ inputs.artifact-id }} \
         --spec /tmp/swagger.json \
         --assets-dir ${GITHUB_WORKSPACE}/${{ inputs.assets-dir }} \
         --version ${{ inputs.version }} \
         --output-dir /tmp/${{ inputs.sdk-name }}/${{ inputs.sdk-folder }} >> $GITHUB_ENV
+        echo "::endgroup::"
 
     - name: Installing the test runner
       shell: bash
