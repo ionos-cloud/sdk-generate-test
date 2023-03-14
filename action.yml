@@ -134,6 +134,7 @@ runs:
     - name: Generating the SDK
       shell: bash
       env:
+      # will be taken by IONOSSDK from env variables
         IONOSSDK_PACKAGE: ${{ inputs.sdk-folder }}
         IONOSSDK_ARTIFACTID: ${{ inputs.artifact-id }}
       run: |-
