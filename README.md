@@ -30,6 +30,7 @@ You can do this by adding the following snippet to your workflow:
 | version   | sdk version | yes      |    V6.0.0     |
 | ionos-vdc-user | Ionos Cloud user to use for tests | yes | |
 | ionos-vdc-password | Ionos Cloud password to use for tests | yes | |
+| ionos-vdc-token | Ionos Cloud token to use for tests | no | |
 | codex-s3-bucket | codex bucked to be used | yes | |
 | codex-s3-key | s3 key to use to read from the bucket | yes | | 
 | codex-s3-secret | s3 secret to use to read from the bucket | yes | |
@@ -73,6 +74,7 @@ _Note_: env and inputs are assumed to be set up, as well as node and java.
           sdk-branch: ${{ env.sdk-branch }}
           ionos-vdc-user: ${{ secrets.IONOS_VDC_USER }}
           ionos-vdc-password: ${{ secrets.IONOS_VDC_PASSWORD }}
+          ionos-vdc-token: ${{ secrets.IONOS_VDC_TOKEN }}
           codex-s3-bucket: ${{ env.codex-s3-bucket }}
           codex-s3-key: ${{ secrets.CODEX_S3_KEY }}
           codex-s3-secret: ${{ secrets.CODEX_S3_SECRET }}
