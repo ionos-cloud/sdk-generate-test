@@ -26,6 +26,12 @@ inputs:
   ionos-vdc-token:
     description: 'Ionos Cloud token'
     required: false
+  ionos-vdc-access-key:
+    description: 'Ionos S3 access key'
+    required: false
+  ionos-vdc-secret-key:
+    description: 'Ionos S3 secret key'
+    required: false
   codex-s3-bucket:
     description: 'codex bucket to use'
     required: true
@@ -189,6 +195,8 @@ runs:
         IONOS_USERNAME: ${{ inputs.ionos-vdc-user }}
         IONOS_PASSWORD: ${{ inputs.ionos-vdc-password }}
         IONOS_TOKEN: ${{ inputs.ionos-vdc-token }}
+        IONOS_S3_ACCESS_KEY: ${{ inputs.ionos-vdc-access-key }}
+        IONOS_S3_SECRET_KEY: ${{ inputs.ionos-vdc-secret-key }}
         IONOS_SDK_TEST_RUNNER_ARGS: ${{ inputs.test-runner-args }}
       run: |-
         if [ "${{ inputs.test }}" == "true" ]; then
