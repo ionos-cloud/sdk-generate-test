@@ -6,7 +6,7 @@ function info() {
 	echo "~ ${1}"
 }
 
-git clone https://${GITHUB_PAT}@github.com/ionos-cloud/sdk-test-drivers.git --branch master --single-branch /tmp/test-drivers
+git clone https://${GITHUB_PAT}@github.com/ionos-cloud/sdk-test-drivers.git --branch feat/java_new_openapi_version --single-branch /tmp/test-drivers
 
 git clone https://${GITHUB_PAT}@github.com/ionos-cloud/${IONOS_SDK_NAME}
 
