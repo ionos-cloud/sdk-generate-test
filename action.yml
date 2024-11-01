@@ -223,6 +223,14 @@ runs:
           echo "::endgroup::"
         fi
 
+    - name: Create Github release for the sdk
+      if: ${{ inputs.sdk-folder == '' }}
+      uses: softprops/action-gh-release@v2
+      with:
+        repository: ionos-cloud/${{ inputs.sdk-name}}
+        generate_release_notes: true
+        tag_name: v${{ inputs.version}}
+        token: ${{ inputs.github-pat }}
 
     - id: output-sdk-dir
       shell: bash
