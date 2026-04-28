@@ -2,7 +2,7 @@
 
 This is a github action used for generating and testing Ionos Cloud SDKs.
 
-# Prerequisites
+# Prerequisites 
 
 The action needs to have the following installed
 - node >= 16  with the `ionos-cloud` scope configured
